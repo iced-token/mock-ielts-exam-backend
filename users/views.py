@@ -8,7 +8,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 from users.models import User
 from users.serializers import LoginSerializer, UserSerializer
-
+from django_filters.rest_framework import DjangoFilterBackend
 
 class RegisterAPIView(GenericAPIView):
     serializer_class = UserSerializer
@@ -57,5 +57,7 @@ class UserViewSet(ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['username']
     
 
