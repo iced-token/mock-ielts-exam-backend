@@ -103,7 +103,7 @@ class ExamViewSet(viewsets.ModelViewSet):
         if not UserExamSession.objects.filter(exam=exam, user=user).exists():
             UserExamSession.objects.create(exam=exam, user=user, listening_started_at=timezone.now())
 
-        serializer = ListeningTestSerializer(exam.listening)
+        serializer = ListeningTestSerializer(exam.listening, context=self.get_serializer_context())
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'], url_path='finish-listening', permission_classes=[IsAuthenticated, IsUserInExam, IsExamNotOver])
@@ -146,7 +146,7 @@ class ExamViewSet(viewsets.ModelViewSet):
         except UserExamSession.DoesNotExist:
             raise PermissionDenied("listening not started")
 
-        serializer = ReadingTestSerializer(exam.reading)
+        serializer = ReadingTestSerializer(exam.reading, context=self.get_serializer_context())
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'], url_path='finish-reading', permission_classes=[IsAuthenticated, IsUserInExam, IsExamNotOver])
@@ -187,7 +187,7 @@ class ExamViewSet(viewsets.ModelViewSet):
         except UserExamSession.DoesNotExist:
             raise PermissionDenied("exam session has not been started, first start listening")
 
-        serializer = WritingTestSerializer(exam.writing)
+        serializer = WritingTestSerializer(exam.writing, context=self.get_serializer_context())
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'], url_path='finish-writing', permission_classes=[IsAuthenticated, IsUserInExam, IsExamNotOver])
