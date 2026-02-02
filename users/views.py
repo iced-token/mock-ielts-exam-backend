@@ -3,9 +3,10 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status,permissions
 from rest_framework.generics import GenericAPIView,RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
-# from users.models import User
+from users.models import User
 from users.serializers import LoginSerializer, UserSerializer
 
 
@@ -52,5 +53,9 @@ class GetMe(RetrieveAPIView):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
+class UserViewSet(ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
     
 
