@@ -7,13 +7,19 @@ User = get_user_model()
 class ListeningTestSerializer(serializers.ModelSerializer):
     class Meta:
         model = ListeningTest
-        exclude = ['answers']
+        fields = '__all__'
+        extra_kwargs = {
+            'answers': {'write_only': True},
+        }
 
 
 class ReadingTestSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReadingTest
-        exclude = ['answers']
+        fields = '__all__'
+        extra_kwargs = {
+            'answers': {'write_only': True},
+        }
 
 
 class WritingTestSerializer(serializers.ModelSerializer):
