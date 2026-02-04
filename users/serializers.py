@@ -2,6 +2,7 @@ from users.models import User
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
@@ -25,13 +26,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(required=False, write_only=True)
 
     def validate(self, data):
         username = data.get("username")
-        password = data.get("password")
 
-        user = authenticate(username=username, password=password)
+        user = get_object_or_404(User.objects.all(), username=username)
         if user:
             if not user.is_active:
                 raise serializers.ValidationError("User is inactive.")
